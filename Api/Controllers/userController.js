@@ -60,4 +60,4 @@ const editPassword = async (req, res) => {
     }
 }
 
-export {login, register, getMe, disable, edit, editPassword}
+export {login, register, getMe, editPassword}
