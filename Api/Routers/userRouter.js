@@ -7,10 +7,10 @@ const userRouter = () => {
     
     userRoute.route('/').put(userController.login);
     userRoute.route('/').post(userController.register);
-    userRoute.route('/me').get(tokenService.authenticateToken, userController.getMe);
-    //userRoute.route('/').delete(tokenService.authenticateToken, userController.disable);
-    //userRoute.route('/:userUuid/').put(tokenService.authenticateToken, userController.edit);
-    userRoute.route('/password').put(tokenService.authenticateToken, userController.editPassword);
+    userRoute.route('/me').get(tokenService.verifyAuthenticateToken, userController.getMe);
+    //userRoute.route('/').delete(tokenService.verifyAuthenticateToken, userController.disable);
+    //userRoute.route('/:userUuid/').put(tokenService.verifyAuthenticateToken, userController.edit);
+    userRoute.route('/password').put(tokenService.verifyAuthenticateToken, userController.editPassword);
 
     return (userRoute);
 }
