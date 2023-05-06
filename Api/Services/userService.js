@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken'
+import Seq from 'sequelize'
 import dotenv from 'dotenv'
 import bcrypt from 'bcrypt'
-import {errorService, dbService} from './index.js'
+import {errorService, dbService, tokenService} from './index.js'
 import {Users} from '../Models/index.js'
 import {v4} from 'uuid'
 
@@ -44,14 +45,9 @@ const login = async (email, password) => {
     return ({
         status: 200,
         data: {
-            user: user,
-            token: jwt.sign(
-                {
-                    userUuid: user.uuid
-                },
-                process.env.RANDOM_STRING,
-                { expiresIn: 3600 }
-            )
+            uuid: user.uuid,
+            type: user.type,
+            token: tokenService.signAuthenticateToken(user.uuid)
         }
     });
 }
@@ -73,14 +69,14 @@ const login = async (email, password) => {
 }*/
 
 const register = async (email, password, token) => {
-    return ({status: 500, data: {error: "NO"}})
-    if (!checkParam(body)) {
-        
+    //return ({status: 500, data: {error: "NO"}})
+    if (!checkParam(email) || !checkParam(password) || !checkParam(token)) {
+        return ({status: 400, data: { error: 'Error in body'}});
     }
     let checkEmail = await dbService.Users.findOne(
         {
             where: {
-                email: body.email
+                email: email
             },
             attributes: Users.attribute.all
         }
@@ -88,30 +84,43 @@ const register = async (email, password, token) => {
     if (checkEmail) {
         return ({status: 400, data: { error: 'Email already exist'}});
     }
-    else if (body.username && body.password && body.email) {
-        if (body.email.indexOf("@") <= 0) {
-            return ({status: 400, data: { error: 'Invalid email'}});
-        } else if (body.password.length < 8) {
-            return ({status: 400, data: { error: 'Invalid password'}});
-        } else {
-            let hashed_pw = await hashPassword(body.password);
-            let created_user = await dbService.Users.create(
+    let dataToken = tokenService.verifyRegisterToken(token)
+    if (!dataToken || dataToken.email != email) {
+        return ({status: 400, data: { error: 'Error in body'}});
+    }
+    if (email.indexOf("@") <= 0) {
+        return ({status: 400, data: { error: 'Invalid email'}});
+    } else if (password.length < 8) {
+        return ({status: 400, data: { error: 'Invalid password'}});
+    } else {
+        let hashed_pw = await hashPassword(password);
+        let uuid = v4()
+        let created_user = await dbService.Users.create(
+            {
+                uuid: uuid,
+                email: email,
+                password: hashed_pw,
+                type: dataToken.type,
+                enable: true
+            }
+        );
+        if (!created_user) {
+            return ({status: 500, data: { error: 'Error creation user'}});
+        }
+        if (dataToken.organisationUuid != null) {
+            let created_userOrg = await dbService.UsersOrganisations.create(
                 {
-                    uuid: v4(),
-                    username: body.username,
-                    email: body.email,
-                    password: hashed_pw,
+                    userUuid: uuid,
+                    organisationUuid: dataToken.organisationUuid,
+                    type: dataToken.organisationType,
                     enable: true
                 }
-            );
-            if (!created_user) {
+            )
+            if (!created_userOrg) {
                 return ({status: 500, data: { error: 'Error creation user'}});
             }
-            return ({status: 200, data: "Account Created"} );
         }
-    }
-    else {
-        return ({status: 400, data: { error: 'Email already exist'}});
+        return ({status: 201, data: {message : "Account created"}});
     }
 }
 
@@ -120,18 +129,25 @@ const getMe = async (user) => {
     if (!isUserToken(user)) {
         return ({status: 401, data: {error: "You need to authenticate"}})
     }
-    let userDb = await getUser(user.userUuid, "protected")
+    let userDb = await getUser(user.userUuid, null, "protected")
     if (!userDb) {
         return ({status: 401, data: {error: 'User not found'}});
     }
     return ({status: 200, data: {user: userDb}});
 }
 
-const getUser = async (userUuid, type) => {
+const getUser = async (uuid, email, type) => {
     let userDb = await dbService.Users.findOne(
         {
             where: {
-                uuid: userUuid
+                [Seq.Op.or]: [
+                    {
+                        uuid: uuid
+                    },
+                    {
+                        email: email
+                    }
+                ]
             },
             attributes: type == "protected" ? Users.attribute.protected : type == "public" ? Users.attribute.public : Users.attribute.all,
             raw: true
@@ -145,7 +161,7 @@ const editPassword = async (user, oldPassword, newPassword) => {
         return ({status: 401, data: {error: "You need to authenticate"}})
     if (!checkParam(oldPassword) || !checkParam(newPassword))
         return ({status: 400, data: {error: "Error in password"}})
-    let userDb = await getUser(user.userUuid, "all")
+    let userDb = await getUser(user.userUuid, null, "all")
     if (!userDb) {
         return ({status: 401, data: {error: 'User not found'}});
     }

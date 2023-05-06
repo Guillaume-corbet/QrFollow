@@ -4,7 +4,6 @@ import {
     Organisations,
     Users,
     UsersOrganisations,
-    UsersTokens
 } from '../Models/index.js'
 
 dotenv.config();
@@ -50,7 +49,6 @@ const init_db = (env) => {
     db.Users = Users.model(db.sequelize, Seq.DataTypes);
     db.Organisations = Organisations.model(db.sequelize, Seq.DataTypes);
     db.UsersOrganisations = UsersOrganisations.model(db.sequelize, Seq.DataTypes);
-    db.UsersTokens = UsersTokens.model(db.sequelize, Seq.DataTypes);
     
     /* FOREIGN KEYS */
     
