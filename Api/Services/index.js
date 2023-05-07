@@ -7,6 +7,7 @@ import * as qrcodeService from './qrcodeService.js'
 import * as regexService from './regexService.js';
 import * as tokenService from './tokenService.js'
 import * as userService from './userService.js'
+import * as organisationService from './organisationService.js'
 
 export {
         codeService,
@@ -18,4 +19,5 @@ export {
         regexService,
         tokenService,
         userService,
+        organisationService
 }

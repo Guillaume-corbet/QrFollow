@@ -31,7 +31,7 @@ CREATE TABLE `Organisations` (
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`uuid`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,7 +40,7 @@ CREATE TABLE `Organisations` (
 
 LOCK TABLES `Organisations` WRITE;
 /*!40000 ALTER TABLE `Organisations` DISABLE KEYS */;
-INSERT INTO `Organisations` VALUES (1,'728c68e5-ba77-41c6-bcdc-b1f2f306bdce','test_organisation',1,'2022-04-28 12:00:00','2022-04-28 12:00:00');
+INSERT INTO `Organisations` VALUES (1,'728c68e5-ba77-41c6-bcdc-b1f2f306bdce','test_organisation',1,'2022-04-28 12:00:00','2022-04-28 12:00:00'),(2,'9a7db470-e17c-41a9-a07b-fa76f91e9a91','org_for_test',1,'2022-04-28 12:00:00','2022-04-28 12:00:00');
 /*!40000 ALTER TABLE `Organisations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -62,7 +62,7 @@ CREATE TABLE `Users` (
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`uuid`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -71,7 +71,7 @@ CREATE TABLE `Users` (
 
 LOCK TABLES `Users` WRITE;
 /*!40000 ALTER TABLE `Users` DISABLE KEYS */;
-INSERT INTO `Users` VALUES (1,'25c619ce-2ca4-4545-9217-17caf9536f5e','default_admin_in_org@gmail.com','$2b$10$yr5hfF.lV92CkW7PElohZOTCLUbwLiBVuH397pMaiifAblm7k1zh6','default',1,'2022-04-28 12:00:00','2022-04-28 12:00:00'),(2,'8c9503c5-cdf9-44a3-befa-8174ee5dc267','default_default_in_org@gmail.com','$2b$10$yr5hfF.lV92CkW7PElohZOTCLUbwLiBVuH397pMaiifAblm7k1zh6','default',1,'2022-04-28 12:00:00','2022-04-28 12:00:00'),(3,'b033c7ce-5441-4a90-b839-e5437fb9a58d','default_no_org@gmail.com','$2b$10$yr5hfF.lV92CkW7PElohZOTCLUbwLiBVuH397pMaiifAblm7k1zh6','default',1,'2022-04-28 12:00:00','2022-04-28 12:00:00'),(4,'f8fcbd6d-0c0e-4ea3-89c5-41daf926fc77','admin@gmail.com','$2b$10$yr5hfF.lV92CkW7PElohZOTCLUbwLiBVuH397pMaiifAblm7k1zh6','admin',1,'2022-04-28 12:00:00','2022-04-28 12:00:00');
+INSERT INTO `Users` VALUES (5,'0b297e9f-de06-4419-b763-7ade0df98aab','default_admin_in_disable@gmail.com','$2b$10$yr5hfF.lV92CkW7PElohZOTCLUbwLiBVuH397pMaiifAblm7k1zh6','default',1,'2022-04-28 12:00:00','2022-04-28 12:00:00'),(1,'25c619ce-2ca4-4545-9217-17caf9536f5e','default_admin_in_org@gmail.com','$2b$10$yr5hfF.lV92CkW7PElohZOTCLUbwLiBVuH397pMaiifAblm7k1zh6','default',1,'2022-04-28 12:00:00','2022-04-28 12:00:00'),(2,'8c9503c5-cdf9-44a3-befa-8174ee5dc267','default_default_in_org@gmail.com','$2b$10$yr5hfF.lV92CkW7PElohZOTCLUbwLiBVuH397pMaiifAblm7k1zh6','default',1,'2022-04-28 12:00:00','2022-04-28 12:00:00'),(3,'b033c7ce-5441-4a90-b839-e5437fb9a58d','default_no_org@gmail.com','$2b$10$yr5hfF.lV92CkW7PElohZOTCLUbwLiBVuH397pMaiifAblm7k1zh6','default',1,'2022-04-28 12:00:00','2022-04-28 12:00:00'),(6,'cc5e53b8-7a92-48aa-8fa6-13f714119de9','default_default_in_disable@gmail.com','$2b$10$yr5hfF.lV92CkW7PElohZOTCLUbwLiBVuH397pMaiifAblm7k1zh6','default',1,'2022-04-28 12:00:00','2022-04-28 12:00:00'),(4,'f8fcbd6d-0c0e-4ea3-89c5-41daf926fc77','admin@gmail.com','$2b$10$yr5hfF.lV92CkW7PElohZOTCLUbwLiBVuH397pMaiifAblm7k1zh6','admin',1,'2022-04-28 12:00:00','2022-04-28 12:00:00');
 /*!40000 ALTER TABLE `Users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -95,7 +95,7 @@ CREATE TABLE `UsersOrganisations` (
   KEY `organisationUuid` (`organisationUuid`),
   CONSTRAINT `UsersOrganisations_ibfk_1` FOREIGN KEY (`userUuid`) REFERENCES `Users` (`uuid`) ON UPDATE CASCADE,
   CONSTRAINT `UsersOrganisations_ibfk_2` FOREIGN KEY (`organisationUuid`) REFERENCES `Organisations` (`uuid`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -104,7 +104,7 @@ CREATE TABLE `UsersOrganisations` (
 
 LOCK TABLES `UsersOrganisations` WRITE;
 /*!40000 ALTER TABLE `UsersOrganisations` DISABLE KEYS */;
-INSERT INTO `UsersOrganisations` VALUES (1,'25c619ce-2ca4-4545-9217-17caf9536f5e','728c68e5-ba77-41c6-bcdc-b1f2f306bdce','default',1,'2022-04-28 12:00:00','2022-04-28 12:00:00'),(2,'8c9503c5-cdf9-44a3-befa-8174ee5dc267','728c68e5-ba77-41c6-bcdc-b1f2f306bdce','admin',1,'2022-04-28 12:00:00','2022-04-28 12:00:00');
+INSERT INTO `UsersOrganisations` VALUES (1,'25c619ce-2ca4-4545-9217-17caf9536f5e','728c68e5-ba77-41c6-bcdc-b1f2f306bdce','default',1,'2022-04-28 12:00:00','2022-04-28 12:00:00'),(2,'8c9503c5-cdf9-44a3-befa-8174ee5dc267','728c68e5-ba77-41c6-bcdc-b1f2f306bdce','admin',1,'2022-04-28 12:00:00','2022-04-28 12:00:00'),(3,'0b297e9f-de06-4419-b763-7ade0df98aab','9a7db470-e17c-41a9-a07b-fa76f91e9a91','admin',1,'2022-04-28 12:00:00','2022-04-28 12:00:00'),(4,'cc5e53b8-7a92-48aa-8fa6-13f714119de9','9a7db470-e17c-41a9-a07b-fa76f91e9a91','default',1,'2022-04-28 12:00:00','2022-04-28 12:00:00');
 /*!40000 ALTER TABLE `UsersOrganisations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -121,4 +121,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-03 13:31:13
+-- Dump completed on 2023-05-07  0:02:41

@@ -23,7 +23,6 @@ const isUserToken = (user) => {
 }
 
 const login = async (email, password) => {
-    //return ({status: 500, data: {error: "NO"}})
     let user = await dbService.Users.findOne(
         {
             where: {
@@ -36,12 +35,10 @@ const login = async (email, password) => {
     if (!user) {
         return({status: 403, data: {error: 'Email invalid'}});
     }
-    // Compare password
     let valid = await bcrypt.compare(password, user.password);
     if (!valid) {
         return({status: 403, data: {error: 'Password invalid'}});
     }
-    //let {password, ...loguser} = user;
     return ({
         status: 200,
         data: {
@@ -69,7 +66,6 @@ const login = async (email, password) => {
 }*/
 
 const register = async (email, password, token) => {
-    //return ({status: 500, data: {error: "NO"}})
     if (!checkParam(email) || !checkParam(password) || !checkParam(token)) {
         return ({status: 400, data: { error: 'Error in body'}});
     }
@@ -125,7 +121,6 @@ const register = async (email, password, token) => {
 }
 
 const getMe = async (user) => {
-    //return ({status: 500, data: {error: "NO"}})
     if (!isUserToken(user)) {
         return ({status: 401, data: {error: "You need to authenticate"}})
     }
